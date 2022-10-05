@@ -16,4 +16,4 @@ $baseUrl = "https://graph.instagram.com/v6.0/{$instaId}/media?fields={$fields}&l
 
 $json = file_get_contents($baseUrl . $instaAccessToken);
 $obj = json_decode($json);
-var_dump(obj);
+var_dump($obj);
