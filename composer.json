@@ -1,5 +1,11 @@
 {
-    "require": {
-        "vlucas/phpdotenv": "^5.4"
+  "require": {
+    "vlucas/phpdotenv": "^5.4",
+    "monolog/monolog": "^3.2"
+  },
+  "config": {
+    "platform": {
+      "php": "8.1"
     }
+  }
 }

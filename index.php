@@ -1,4 +1,9 @@
 <?php
+use Monolog\Level;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
@@ -13,7 +18,30 @@ $limit = 8;
 $fields = 'id,caption,media_url,permalink';
 $baseUrl = "https://graph.instagram.com/v6.0/{$instaId}/media?fields={$fields}&limit={$limit}&access_token=";
 
+$cacheKey = 'instaProxy';
+$ttl = 60 * 15; // 15 minutes.
 
-$json = file_get_contents($baseUrl . $instaAccessToken);
-$obj = json_decode($json);
-var_dump($obj);
+// Create the logger
+$logger = new Logger($cacheKey);
+// Now add some handlers
+$logger->pushHandler(new StreamHandler(__DIR__.'/'.$cacheKey.'.log', Level::Info));
+$logger->pushHandler(new FirePHPHandler());
+// You can now use your logger
+$logger->info('My logger is now ready');
+
+// Checks if there is data in the cache by key
+$cachedData = apcu_fetch($cacheKey);
+if(!$cachedData) {
+  $cachedData = file_get_contents($baseUrl . $instaAccessToken);
+  $isStored = apcu_store($cacheKey, $cachedData, $ttl);
+  $dateNow = date("Y.m.d H:i");
+  $logger->info("Cache generated: {$isStored} at {$dateNow}");
+}
+else{
+  $logger->info("Returned cached data at {$dateNow}");
+
+}
+
+header("Content-Type: application/json");
+echo ($cachedData);
+exit();
