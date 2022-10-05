@@ -26,19 +26,13 @@ $logger = new Logger($cacheKey);
 // Now add some handlers
 $logger->pushHandler(new StreamHandler(__DIR__.'/'.$cacheKey.'.log', Level::Info));
 $logger->pushHandler(new FirePHPHandler());
-// You can now use your logger
-$logger->info('My logger is now ready');
 
 // Checks if there is data in the cache by key
 $cachedData = apcu_fetch($cacheKey);
 if(!$cachedData) {
   $cachedData = file_get_contents($baseUrl . $instaAccessToken);
   $isStored = apcu_store($cacheKey, $cachedData, $ttl);
-  $logger->info("Cache generated: {$isStored}");
-}
-else{
-  $logger->info("Returned cached data");
-
+  $logger->info("Cache generated.", [$isStored]);
 }
 
 header("Content-Type: application/json");
