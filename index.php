@@ -34,11 +34,10 @@ $cachedData = apcu_fetch($cacheKey);
 if(!$cachedData) {
   $cachedData = file_get_contents($baseUrl . $instaAccessToken);
   $isStored = apcu_store($cacheKey, $cachedData, $ttl);
-  $dateNow = date("Y.m.d H:i");
-  $logger->info("Cache generated: {$isStored} at {$dateNow}");
+  $logger->info("Cache generated: {$isStored}");
 }
 else{
-  $logger->info("Returned cached data at {$dateNow}");
+  $logger->info("Returned cached data");
 
 }
 
