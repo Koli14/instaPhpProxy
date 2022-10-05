@@ -3,6 +3,7 @@ use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
+use Monolog\Formatter\LineFormatter;
 
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
