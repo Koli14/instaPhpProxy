@@ -32,7 +32,7 @@ $cachedData = apcu_fetch($cacheKey);
 if(!$cachedData) {
   $cachedData = file_get_contents($baseUrl . $instaAccessToken);
   $isStored = apcu_store($cacheKey, $cachedData, $ttl);
-  $logger->info("Cache generated.", [$isStored]);
+  $logger->info("Cache generated: ", [$isStored]);
 }
 
 header("Content-Type: application/json");
