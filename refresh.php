@@ -1,4 +1,10 @@
 <?php
+use Monolog\Level;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+use Monolog\Formatter\LineFormatter;
+
 require __DIR__ . '/vendor/autoload.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -12,4 +18,16 @@ $baseUrl = 'https://graph.instagram.com/refresh_access_token?grant_type=ig_refre
 // More info: https://developers.facebook.com/docs/instagram-basic-display-api/guides/long-lived-access-tokens#get-a-long-lived-token
 
 $data = file_get_contents($baseUrl . $instaAccessToken);
+
+$name = "refreshToken";
+$dateFormat = "Y.m.d H:i:s";
+$output = "[%datetime%] > %level_name% > %message% %context%\n";
+$formatter = new LineFormatter($output, $dateFormat);
+$stream = new StreamHandler(__DIR__.'/'.$name.'.log', Level::Info);
+$stream->setFormatter($formatter);
+$logger = new Logger($name);
+$logger->pushHandler($stream);
+$logger->pushHandler(new FirePHPHandler());
+$logger->info("Trying to refresh instaToken DONE.");
+
 echo("Trying to refresh instaToken DONE.");
