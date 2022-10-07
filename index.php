@@ -1,10 +1,4 @@
 <?php
-use Monolog\Level;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\FirePHPHandler;
-use Monolog\Formatter\LineFormatter;
-
 require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -17,16 +11,6 @@ $fields = 'id,caption,media_url,permalink';
 $url = "https://graph.instagram.com/v6.0/{$instaId}/media?fields={$fields}&limit={$limit}&access_token={$instaAccessToken}";
 
 $cacheKey = 'instaProxy';
-
-$dateFormat = "Y.m.d H:i:s";
-$output = "[%datetime%] > %level_name% > %message% %context%\n";
-$formatter = new LineFormatter($output, $dateFormat);
-$stream = new StreamHandler(__DIR__.'/'.$cacheKey.'.log', Level::Info);
-$stream->setFormatter($formatter);
-$logger = new Logger($cacheKey);
-$logger->pushHandler($stream);
-$logger->pushHandler(new FirePHPHandler());
-$logger->info("URL:", $url);
 
 // Checks if there is data in the cache by key
 $cachedData = apcu_fetch($cacheKey);
